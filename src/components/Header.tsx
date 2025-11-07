@@ -3,17 +3,20 @@
 import Link from "next/link";
 import { categories } from "@/data/books";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCategories, setShowCategories] = useState(false);
+  const { getTotalItems } = useCart();
+  const cartItemsCount = getTotalItems();
 
   return (
     <header className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-white/20">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4 border-b border-gray-200">
           <Link href="/" className="text-3xl font-bold text-sky-900">
-            ایران‌کتاب
+            کتابچی
           </Link>
           <div className="flex-1 max-w-2xl mx-8">
             <div className="relative">
@@ -45,14 +48,14 @@ export default function Header() {
           <nav className="flex items-center gap-6">
             <Link
               href="/"
-              className="text-gray-700 hover:text-red-600 transition font-medium"
+              className="text-gray-700 hover:text-sky-600 transition font-medium"
             >
               خانه
             </Link>
             <div className="relative">
               <button
                 onClick={() => setShowCategories(!showCategories)}
-                className="text-gray-700 hover:text-red-600 transition font-medium flex items-center gap-1"
+                className="text-gray-700 hover:text-sky-600 transition font-medium flex items-center gap-1"
               >
                 دسته‌بندی‌ها
                 <svg
@@ -80,7 +83,7 @@ export default function Header() {
                         <Link
                           key={category}
                           href={`/categories?cat=${category}`}
-                          className="text-sm text-gray-700 hover:text-red-600 py-1 px-2 rounded hover:bg-gray-50"
+                          className="text-sm text-gray-700 hover:text-sky-600 py-1 px-2 rounded hover:bg-gray-50"
                           onClick={() => setShowCategories(false)}
                         >
                           {category}
@@ -91,24 +94,48 @@ export default function Header() {
               )}
             </div>
             <Link
+              href="/cart"
+              className="relative text-gray-700 hover:text-sky-600 transition font-medium flex items-center gap-1"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              سبد خرید
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemsCount}
+                </span>
+              )}
+            </Link>
+            <Link
               href="/profile"
-              className="text-gray-700 hover:text-red-600 transition font-medium"
+              className="text-gray-700 hover:text-sky-600 transition font-medium"
             >
               پروفایل
             </Link>
           </nav>
         </div>
         <div className="py-3 flex items-center gap-6 text-sm text-gray-600">
-          <Link href="/" className="hover:text-red-600 transition">
+          <Link href="/" className="hover:text-sky-600 transition">
             پرفروش‌ها
           </Link>
-          <Link href="/" className="hover:text-red-600 transition">
+          <Link href="/" className="hover:text-sky-600 transition">
             تازه‌ها
           </Link>
-          <Link href="/" className="hover:text-red-600 transition">
+          <Link href="/" className="hover:text-sky-600 transition">
             پیشنهاد ویژه
           </Link>
-          <Link href="/" className="hover:text-red-600 transition">
+          <Link href="/" className="hover:text-sky-600 transition">
             تخفیف‌ها
           </Link>
         </div>

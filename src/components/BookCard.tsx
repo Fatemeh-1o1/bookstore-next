@@ -18,19 +18,19 @@ export default function BookCard({ book }: BookCardProps) {
   return (
     <Link href={`/book/${bookSlug}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100">
-        <div className="h-80 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+        <div className="h-56 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
           {book.isBestseller && (
-            <div className="absolute top-2 right-2 bg-sky-900 text-white text-xs px-2 py-1 rounded z-10">
+            <div className="absolute top-1 right-1 bg-sky-900 text-white text-xs px-1.5 py-0.5 rounded z-10">
               پرفروش
             </div>
           )}
           {book.isNew && (
-            <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
+            <div className="absolute top-1 right-1 bg-green-600 text-white text-xs px-1.5 py-0.5 rounded z-10">
               جدید
             </div>
           )}
           {book.oldPrice && (
-            <div className="absolute top-2 left-2 bg-sky-400/50 text-white text-xs px-2 py-1 rounded z-10">
+            <div className="absolute top-1 left-1 bg-sky-400/50 text-white text-xs px-1.5 py-0.5 rounded z-10">
               {discountPercent}% تخفیف
             </div>
           )}
@@ -43,27 +43,27 @@ export default function BookCard({ book }: BookCardProps) {
               unoptimized
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm text-center p-4">
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs text-center p-2">
               {book.title}
             </div>
           )}
         </div>
-        <div className="p-4">
-          <h3 className="font-bold text-base mb-2 text-gray-800 line-clamp-2 h-12">
+        <div className="p-3">
+          <h3 className="font-bold text-sm mb-1 text-gray-800 line-clamp-2 h-10">
             {book.title}
           </h3>
-          <p className="text-gray-600 text-sm mb-3">{book.author}</p>
-          <div className="flex items-center gap-2 mb-2">
+          <p className="text-gray-600 text-xs mb-2">{book.author}</p>
+          <div className="flex items-center gap-2 mb-1">
             {book.oldPrice && (
-              <span className="text-gray-400 text-sm line-through">
+              <span className="text-gray-400 text-xs line-through">
                 {book.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-sky-700 text-base">
+            <span className="text-sky-700 text-sm">
               {book.price.toLocaleString()} تومان
             </span>
           </div>
-          <p className="text-xs text-gray-500 mt-2">{book.category}</p>
+          <p className="text-xs text-gray-500 mt-1">{book.category}</p>
         </div>
       </div>
     </Link>

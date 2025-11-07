@@ -4,22 +4,37 @@ import { findBookBySlug, createSlug } from "@/data/books";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { useCart } from "@/contexts/CartContext";
 import { useState } from "react";
 
 export default function BookDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const book = findBookBySlug(slug);
+  const { addToCart } = useCart();
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const [showDetails, setShowDetails] = useState(false);
+  const handleAddToCart = () => {
+    if (book) {
+      addToCart(book);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    }
+  };
 
   if (!book) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold mb-4">کتاب یافت نشد</h1>
-        <Link href="/" className="text-sky-600 hover:text-sky-700">
-          بازگشت به صفحه اصلی
-        </Link>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Header />
+        <div className="flex-1 container mx-auto px-4 py-8 text-center">
+          <h1 className="text-2xl font-bold mb-4">کتاب یافت نشد</h1>
+          <Link href="/" className="text-sky-600 hover:text-sky-700">
+            بازگشت به صفحه اصلی
+          </Link>
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -32,8 +47,9 @@ export default function BookDetailPage() {
   const isBase64Image = book.image.startsWith("data:");
 
   return (
-    <div className="bg-gradient-to-br bg-white min-h-screen flex items-center justify-center py-5">
-        <div className="w-full max-w-7xl mx-auto px-4">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-8">
         <div className="lg:hidden bg-white rounded-lg shadow-md p-4 mb-3">
           <h1 className="font-bold text-xl text-center mb-2">{book.title}</h1>
           <div className="flex gap-2 items-center justify-center">
@@ -48,8 +64,47 @@ export default function BookDetailPage() {
           </div>
         </div>
 
-        <div className="flex gap-4 flex-col lg:flex-row">
-          <div className="w-full lg:w-4/5">
+        <div className="flex gap-4 flex-col lg:flex-row-reverse">
+          <div className="w-full lg:w-1/4">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <h3 className="text-xl font-bold mb-4 text-gray-800">مشخصات کتاب</h3>
+              <div className="flex flex-col gap-3">
+                {book.bookCode && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600 text-sm font-medium">کد کتاب:</span>
+                    <span className="text-gray-800 text-sm">{book.bookCode}</span>
+                  </div>
+                )}
+                {book.isbn && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600 text-sm font-medium">شابک:</span>
+                    <span className="text-gray-800 text-sm">{book.isbn}</span>
+                  </div>
+                )}
+                {book.format && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600 text-sm font-medium">قطع:</span>
+                    <span className="text-gray-800 text-sm">{book.format}</span>
+                  </div>
+                )}
+                {book.pages && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600 text-sm font-medium">تعداد صفحه:</span>
+                    <span className="text-gray-800 text-sm">{book.pages}</span>
+                  </div>
+                )}
+                {book.year && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-600 text-sm font-medium">سال انتشار شمسی:</span>
+                    <span className="text-gray-800 text-sm">{book.year}</span>
+                  </div>
+                )}
+                
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-3/4">
             <div className="bg-white rounded-lg shadow-md p-4">
               <div className="flex flex-col lg:flex-row gap-4">
                 <div className="relative">
@@ -163,23 +218,106 @@ export default function BookDetailPage() {
                       </div>
                     </div>
 
-                    <button className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition w-full font-medium">
+                    <button
+                      onClick={handleAddToCart}
+                      className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition w-full font-medium"
+                    >
                       افزودن به سبد
                     </button>
+                    {showSuccess && (
+                      <div className="mt-2 text-sm text-green-600 text-center">
+                        ✓ به سبد خرید اضافه شد
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2 mt-4 lg:hidden">
-                
-                <button className="grow bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition font-medium">
+                <button
+                  onClick={handleAddToCart}
+                  className="grow bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition font-medium"
+                >
                   افزودن به سبد
                 </button>
               </div>
+              {showSuccess && (
+                <div className="mt-2 text-sm text-green-600 text-center lg:hidden">
+                  ✓ به سبد خرید اضافه شد
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
+
+        <div className="bg-white rounded-lg shadow-md p-4 mt-6">
+          <h3 className="text-xl font-bold mb-4 text-gray-800">نظرات کاربران</h3>
+          <div className="mb-6">
+            <p className="text-gray-500 text-sm mb-4">هنوز نظری ثبت نشده است.</p>
+          </div>
+          <div className="border-t border-gray-200 pt-6">
+            <h4 className="text-lg font-semibold mb-4 text-gray-800">نظر خود را بنویسید</h4>
+            <form className="space-y-4">
+              <div>
+                <label htmlFor="comment-name" className="block text-sm font-medium text-gray-700 mb-2">
+                  نام
+                </label>
+                <input
+                  type="text"
+                  id="comment-name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="نام خود را وارد کنید"
+                />
+              </div>
+              <div>
+                <label htmlFor="comment-email" className="block text-sm font-medium text-gray-700 mb-2">
+                  ایمیل
+                </label>
+                <input
+                  type="email"
+                  id="comment-email"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="ایمیل خود را وارد کنید"
+                />
+              </div>
+              <div>
+                <label htmlFor="comment-rating" className="block text-sm font-medium text-gray-700 mb-2">
+                  امتیاز
+                </label>
+                <select
+                  id="comment-rating"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                >
+                  <option value="">انتخاب امتیاز</option>
+                  <option value="5">5 ستاره</option>
+                  <option value="4">4 ستاره</option>
+                  <option value="3">3 ستاره</option>
+                  <option value="2">2 ستاره</option>
+                  <option value="1">1 ستاره</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="comment-text" className="block text-sm font-medium text-gray-700 mb-2">
+                  نظر شما
+                </label>
+                <textarea
+                  id="comment-text"
+                  rows={5}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="نظر خود را بنویسید..."
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition font-medium mx-auto block"
+              >
+                ارسال نظر
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }
