@@ -20,7 +20,7 @@ export default function Header() {
 
               <input
                 type="text"
-                placeholder ="جستجوی کتاب، نویسنده یا موضوع..."
+                placeholder ="جستجوی کتاب، نویسنده یا موضوع.."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-4 py-2 pr-12 border border-sky-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-black placeholder:text-black/40"
